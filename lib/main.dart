@@ -1,6 +1,8 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 void main() {
   runApp(MyApp());
@@ -78,6 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         page = FavoritesPage();
         break;
+      case 2:
+        page = PieChartPage();
+        break;
+      case 3:
+        page = LineChartPage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -100,27 +108,35 @@ class _MyHomePageState extends State<MyHomePage> {
             // on narrow screens.
             return Column(
               children: [
-                Expanded(child: mainArea,),
-                SafeArea(
-                  child: BottomNavigationBar(
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite),
-                        label: 'Favorites',
-                      ),
-                    ],
-                    currentIndex: selectedIndex,
-                    onTap: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
-                )
+                Expanded(
+                  child: mainArea,
+                ),
+                BottomNavigationBar(
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.favorite),
+                      label: 'Favorites',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.pie_chart_outline_outlined),
+                      label: 'PieChart',
+                    ),
+                    // BottomNavigationBarItem(
+                    //   icon: Icon(Icons.add_chart_rounded),
+                    //   label: 'LineChart',
+                    // ),
+                  ],
+                  currentIndex: selectedIndex,
+                  onTap: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
+                ),
               ],
             );
           } else {
@@ -137,6 +153,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       NavigationRailDestination(
                         icon: Icon(Icons.favorite),
                         label: Text('Favorites'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.add_chart_rounded),
+                        label: Text('LineCharts'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.pie_chart_outline_outlined),
+                        label: Text('PieChart'),
                       ),
                     ],
                     selectedIndex: selectedIndex,
@@ -365,6 +389,89 @@ class _HistoryListViewState extends State<HistoryListView> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class LineChartPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Line Chart'),
+      ),
+      body: Center(
+        child: LineChart(
+          LineChartData(
+            lineBarsData: [
+              LineChartBarData(
+                spots: [
+                  FlSpot(0, 3),
+                  FlSpot(1, 4),
+                  FlSpot(2, 3.5),
+                  FlSpot(3, 5),
+                  FlSpot(4, 4),
+                  FlSpot(5, 6),
+                ],
+                isCurved: true,
+                color: Colors.blue,
+                barWidth: 3.5,
+                isStrokeCapRound: true,
+                belowBarData: BarAreaData(show: false),
+              ),
+            ],
+            // titlesData: FlTitlesData(
+            //   leftTitles: SideTitles(showTitles: true),
+            //   bottomTitles: SideTitles(showTitles: true),
+            // ),
+            borderData: FlBorderData(show: true),
+            gridData: FlGridData(show: true),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PieChartPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pie Chart'),
+      ),
+      body: Center(
+        child: PieChart(
+          PieChartData(
+            sections: [
+              PieChartSectionData(
+                value: 40,
+                color: Colors.blue,
+                title: 'A',
+                radius: 100,
+              ),
+              PieChartSectionData(
+                value: 30,
+                color: Colors.green,
+                title: 'B',
+                radius: 80,
+              ),
+              PieChartSectionData(
+                value: 20,
+                color: Colors.red,
+                title: 'C',
+                radius: 60,
+              ),
+              PieChartSectionData(
+                value: 10,
+                color: Colors.orange,
+                title: 'D',
+                radius: 40,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
